@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/tkoolen/LoopThrottle.jl.svg?branch=master)](https://travis-ci.org/tkoolen/LoopThrottle.jl)
 [![codecov.io](http://codecov.io/github/tkoolen/LoopThrottle.jl/coverage.svg?branch=master)](http://codecov.io/github/tkoolen/LoopThrottle.jl?branch=master)
 
-The LoopThrottle package exports the `@throttle` macro, which can be used to
+LoopThrottle is a tiny Julia package that exports the `@throttle` macro, which can be used to
 slow down a `for` loop or `while` loop by calling `sleep` at the beginning of each
 loop iteration (if necessary), so that a designated variable increases
 at a rate of at most `max_rate` (compared to wall time).
