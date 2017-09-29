@@ -27,16 +27,16 @@ increase. Defaults to `1.`.
 # Examples
 ```julia
 x = 0
-@throttle t for t = 1 : 1e-3 : 2
+@throttle t for t = 1 : 0.01 : 2
     x += 1
 end max_rate = 2.
 ```
-will finish in approximately 0.5 second.
+will finish in approximately 0.5 seconds.
 
 ```julia
 x = 0.
-@throttle x for i = 1 : 1000
-    x += 1e-3
+@throttle x for i = 0 : 10
+    x += 0.1
 end
 ```
 will use the default `max_rate` value of `1.` and thus finish in approximately 1 second.

@@ -11,7 +11,7 @@ at a rate of at most `max_rate` (compared to wall time).
 ## Examples
 ```julia
 x = 0
-@throttle t for t = 1 : 1e-3 : 2
+@throttle t for t = 1 : 0.01 : 2
     x += 1
 end max_rate = 2.
 ```
@@ -19,7 +19,7 @@ will finish in approximately 0.5 second.
 
 ```julia
 x = 0.
-@throttle x for i = 1 : 1000
+@throttle x for i = 0 : 1000
     x += 1e-3
 end
 ```
