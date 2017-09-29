@@ -20,7 +20,7 @@ function fast_while_loop_test(i0, i_increment, imax, rate, min_sleep_time)
     @test elapsed ≈ (i - i0) / rate atol = 1e-2
 end
 
-@testset "while loop" begin
+@testset "fast while loop" begin
     # compile
     fast_while_loop_throttle(0, 2, 2000, Inf, 0.01)
 
@@ -28,4 +28,20 @@ end
     fast_while_loop_test(0, 2, 2000, 1000., 0.01)
     fast_while_loop_test(6, 3, 3000, 2000., 0.01)
     fast_while_loop_test(0, 1, 10, 5., 0.01)
+end
+
+@testset "fast for loop" begin
+    n = 1000
+    function f()
+        result = 0
+        @throttle i for i = 1 : n
+            result += i
+        end max_rate = 2 * n
+        result
+    end
+
+    result = f()
+    @test result == div(n * (n + 1), 2)
+    elapsed = @elapsed f()
+    @test elapsed ≈ 0.5 atol = 5e-2
 end
