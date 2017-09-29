@@ -1,5 +1,56 @@
 module LoopThrottle
 
-# package code goes here
+export
+    @throttle
+
+function loop_throttle_params(; max_rate::Number = 1., min_sleep_time::Number = 1e-2)
+    min_sleep_time >= 0.001 || error("min_sleep_time must be at least 0.001")
+    max_rate, min_sleep_time
+end
+
+"""
+Throttle a loop by sleeping periodically (with minimum duration `minsleeptime`),
+so that `t` doesn't increase faster than `maxrate`.
+
+Note that the sleep function rounds to 1e-3.
+
+Decreasing minsleeptime makes throttling smoother (more frequent, shorter pauses),
+but reduces accuracy due to rounding error.
+
+"""
+macro throttle(t::Symbol, loopexpr::Expr, params::Expr...)
+    foreach(params) do expr
+        @assert expr.head == :(=)
+        expr.head = :kw
+        expr.args[2] = esc(expr.args[2])
+    end
+
+    setup = quote
+        max_rate, min_sleep_time = loop_throttle_params($(params...))
+        t0 = $(esc(t)) # TODO
+        walltime0 = time()
+    end
+
+    @assert loopexpr.head == :while
+    loopcondition = loopexpr.args[1]
+    loopbody = loopexpr.args[2]
+    newloopbody = quote
+        $(esc(loopbody))
+        if !isinf(max_rate)
+            Δwalltime = time() - walltime0
+            Δt = $(esc(t)) - t0
+            sleeptime = Δt / max_rate - Δwalltime
+            if sleeptime > min_sleep_time
+                sleep(sleeptime)
+            end
+        end
+    end
+    loop = Expr(loopexpr.head, :($(esc(loopcondition))), newloopbody)
+
+    quote
+        $setup
+        $loop
+    end
+end
 
 end # module
