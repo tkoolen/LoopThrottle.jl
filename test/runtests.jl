@@ -19,7 +19,7 @@ function fast_while_loop_test(i0, i_increment, imax, rate, min_sleep_time)
     elapsed, nloops, i = fast_while_loop_throttle(i0, i_increment, imax, rate, min_sleep_time)
     @test nloops == div(imax - i0, i_increment)
     @test i == i0 + nloops * i_increment
-    @test elapsed ≈ (i - i0) / rate atol = 1e-2
+    @test elapsed ≈ i_increment * (nloops - 1) / rate atol = 1e-2
 end
 
 @testset "fast while loop" begin
@@ -36,7 +36,7 @@ end
     n = 1000
     function f()
         result = 0
-        @throttle i for i = 1 : n
+        @throttle i for i = 0 : n
             result += i
         end max_rate = 2 * n
         result
@@ -46,6 +46,13 @@ end
     @test result == div(n * (n + 1), 2)
     elapsed = @elapsed f()
     @test elapsed ≈ 0.5 atol = 5e-2
+end
+
+@testset "fencepost" begin
+    elapsed = @elapsed @throttle i for i = 0 : 1
+        nothing
+    end
+    @test elapsed ≈ 1. atol = 1e-2
 end
 
 end
