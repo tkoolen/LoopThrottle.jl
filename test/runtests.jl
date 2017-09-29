@@ -55,4 +55,25 @@ end
     @test elapsed ≈ 1. atol = 1e-2
 end
 
+@testset "slow for loop" begin
+    n = 10
+    iteration_time = 0.2
+
+    f = function ()
+        @throttle i for i = 1 : n
+            sleep(iteration_time)
+        end max_rate = 10.
+    end
+
+    g = function ()
+        for i = 1 : n
+            sleep(iteration_time)
+        end
+    end
+
+    f()
+    g()
+    @test @elapsed(f()) ≈ @elapsed(g()) atol = 1e-2
+end
+
 end
