@@ -21,6 +21,7 @@ but reduces accuracy due to rounding error.
 macro throttle(t::Symbol, loopexpr::Expr, params::Expr...)
     foreach(params) do expr
         @assert expr.head == :(=)
+        @assert expr.args[1] isa Symbol
         expr.head = :kw
         expr.args[2] = esc(expr.args[2])
     end

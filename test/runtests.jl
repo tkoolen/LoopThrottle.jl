@@ -1,3 +1,5 @@
+module LoopThrottleTest
+
 using LoopThrottle
 using Base.Test
 
@@ -44,4 +46,6 @@ end
     @test result == div(n * (n + 1), 2)
     elapsed = @elapsed f()
     @test elapsed ≈ 0.5 atol = 5e-2
+end
+
 end
