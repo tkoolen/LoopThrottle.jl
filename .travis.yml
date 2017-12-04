@@ -4,6 +4,7 @@ os:
   - linux
 julia:
   - 0.6
+  - nightly
 branches:
   only:
     - master
@@ -12,6 +13,9 @@ notifications:
   email: false
 git:
   depth: 99999999
+matrix:
+  allow_failures:
+    - julia: nightly
 
 ## uncomment the following lines to allow failures on nightly julia
 ## (tests will run but not make your overall status red)
