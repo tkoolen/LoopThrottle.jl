@@ -49,9 +49,13 @@ end
 end
 
 @testset "fencepost" begin
-    elapsed = @elapsed @throttle i for i = 0 : 1
-        nothing
+    function f()
+        @throttle i for i = 0 : 1
+            nothing
+        end
     end
+    f()
+    elapsed = @elapsed f()
     @test elapsed ≈ 1. atol = 1e-2
 end
 
