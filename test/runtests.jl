@@ -1,7 +1,7 @@
 module LoopThrottleTest
 
 using LoopThrottle
-using Compat.Test
+using Test
 
 function fast_while_loop_throttle(i0, i_increment, imax, rate, min_sleep_time)
     i = i0
