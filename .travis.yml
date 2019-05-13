@@ -3,9 +3,8 @@ language: julia
 os:
   - linux
 julia:
-  - 0.6
-  - 0.7
   - 1.0
+  - 1.1
   - nightly
 matrix:
   allow_failures:
@@ -17,4 +16,4 @@ branches:
 notifications:
   email: false
 after_success:
-- if [[ "$TRAVIS_JULIA_VERSION" == 0.6 ]]; then julia -e 'cd(Pkg.dir("LoopThrottle")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'; else julia --project -e 'Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'; fi
+- julia --project -e 'using Pkg; pkg"add Coverage"; using Coverage; Codecov.submit(Codecov.process_folder())';
